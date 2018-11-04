@@ -1,0 +1,42 @@
+<html>
+<body>
+<pre>
+Hello,VM!
+##这里是注释
+value1:$!{value1}
+$!{value2} ##加！表示值不存在就不显示
+${value3}
+
+#foreach ($color in $colors)
+    Color $!(foreach.index)/$!(foreach.count)): $!{color}
+#end
+
+#foreach($key in $map.keySet())
+    Number $!(foreach.index)/$!(foreach.count): $!{key} $map.get($key)}
+#end
+
+User:$!{user.name} ##调用user里面的属性
+User:$!{user.getName()}  ##调用user里面的方法
+
+##模板继承
+#set($title = "newsSite")
+Include: #include("header.vm") ##单纯的包含，纯文本扩展
+<br>
+Parse: #parse("header.vm") ##变量解析
+
+#macro(render_color, $color, $index)
+    Color By Macro $index, $color;
+#end
+#foreach($color in $colors)
+    #render_color($color,$foreach.index)
+#end
+
+    #set($hello="hello")
+    #set($hwworld1="$!{hello}world"); ##双引号里面的才会被模板引擎解析
+    #set($hwworld2='$!{hello}world');
+hwword1:$hwworld1
+hwword2:$hwworld2
+
+</pre>
+</body>
+</html>
