@@ -7,12 +7,13 @@ value1:$!{value1}
 $!{value2} ##加！表示值不存在就不显示
 ${value3}
 
+    ##遍历
 #foreach ($color in $colors)
-    Color $!(foreach.index)/$!(foreach.count)): $!{color}
+    Color： $!{foreach.index}/$!{foreach.count}:$!{color}
 #end
 
 #foreach($key in $map.keySet())
-    Number $!(foreach.index)/$!(foreach.count): $!{key} $map.get($key)}
+    Number: $!{foreach.index}/$!{foreach.count}:$!{key} $map.get($key)
 #end
 
 User:$!{user.name} ##调用user里面的属性

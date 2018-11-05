@@ -8,3 +8,7 @@
 - 重定向/Error
 - Ioc
 - AOP(log为例)
+### 2.数据库：
+- 数据库创建与连接
+- CURD(增更读删)
+- Mybatis集成
