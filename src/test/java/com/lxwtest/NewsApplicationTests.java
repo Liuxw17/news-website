@@ -14,6 +14,4 @@ import org.springframework.test.context.web.WebAppConfiguration;
 @WebAppConfiguration
 public class NewsApplicationTests {
 
-
-
 }

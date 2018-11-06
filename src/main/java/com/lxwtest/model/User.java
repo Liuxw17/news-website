@@ -2,15 +2,17 @@ package com.lxwtest.model;
 
 
 public class User {
+    //定义变量和属性
     private int id;
     private String name;
     private String password;
     private String salt;
     private String headUrl;
 
+    //构造函数
     public User() {
-
     }
+
     public User(String name) {
         this.name = name;
         this.password = "";
