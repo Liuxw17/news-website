@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Mapper
 public interface UserDAO {
-    String TABLE_NAME= "user";
+    String TABLE_NAME="user";
     String INSERT_FIELDS=" name, password, salt, head_url "; //前面加空格，组合语句方便些
     String SELECT_FIELDS= " id, name, password, salt, head_url";
 

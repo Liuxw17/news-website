@@ -7,9 +7,9 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+
+
 //dao层是接口类型
-
-
 @Mapper
 public interface NewsDAO {
     String TABLE_NAME = "news";

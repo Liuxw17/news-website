@@ -18,3 +18,4 @@
 ### 项目心得：
 1. pom.xml的配置很重要，在使用Mybatis的时候因为pom.xml的配置问题卡住了很久(后面查询到原因为Mybatis的版本号的问题)；
 2. test文件夹下暂且多余的文件会影响整个项目的运行，因为NewsApplicationTests的存在耽误了很久进度；
+3. DAO.xml里面的namespace要对应项目中的结构；
