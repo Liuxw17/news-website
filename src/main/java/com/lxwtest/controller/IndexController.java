@@ -2,6 +2,7 @@ package com.lxwtest.controller;
 
 import com.lxwtest.model.User;
 import com.lxwtest.service.NewsService;
+import com.lxwtest.service.TestNewsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,15 +22,14 @@ public class IndexController {
     private static final Logger logger = LoggerFactory.getLogger(IndexController.class);
 
     @Autowired
-    private NewsService newsService;
+    private TestNewsService testNewsService;
 
-    @RequestMapping(path={"/","/index"})
+    @RequestMapping(path={"/","/index"},method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public String index(HttpSession session){
-        newsService.say();
         logger.info("Visit Index");
         return "Hello!"+ session.getAttribute("msg")
-                +"<br>Say:"+newsService.say();
+                +"<br>Say:"+testNewsService.say();
     }
 
     @RequestMapping(path={"/profile/{groupId}/{userId}"})

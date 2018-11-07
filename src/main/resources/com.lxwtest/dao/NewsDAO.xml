@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<!--这样处理的好处是可以写复杂的逻辑-->
-<mapper namespace="com.lxwtest.dao.NewsDAO">
+<mapper namespace="com.nowcoder.dao.NewsDAO">
     <sql id="table">news</sql>
-    <sql id="selectFields">id,title, link, image, like_count, comment_count,created_date,user_id</sql>
+    <sql id="selectFields">id,title, link, image, like_count, comment_count,created_date,user_id
+    </sql>
     <select id="selectByUserIdAndOffset" resultType="com.lxwtest.model.News">
         SELECT
         <include refid="selectFields"/>
