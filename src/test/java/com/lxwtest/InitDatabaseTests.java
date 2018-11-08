@@ -33,7 +33,7 @@ public class InitDatabaseTests{
             User user = new User();
 
             //增加用户资料
-            user.setHeadUrl(String.format("http://images.sivanliu.com/head/%dt.png",random.nextInt(1000)));
+            user.setHeadUrl(String.format("http://images.xxx.com/head/%dt.png",random.nextInt(1000)));
             user.setName(String.format("USER%d",i));
             user.setPassword("");
             user.setSalt("");
@@ -44,11 +44,11 @@ public class InitDatabaseTests{
             Date date = new Date();
             date.setTime(date.getTime()+1000*3600*5*i);//以毫秒为单位计时
             news.setCreatedDate(date);
-            news.setImage(String.format("http://images.sivanliu.com/head/%dm.png",random.nextInt(1000)));
+            news.setImage(String.format("http://images.xxx.com/head/%dm.png",random.nextInt(1000)));
             news.setLikeCount(i+1);
             news.setUserId(i+1);
             news.setTitle(String.format("TITLE{%d}",i));
-            news.setLink(String.format("http://www.sivanliu.com/%d.html",i));
+            news.setLink(String.format("http://www.xxx.com/%d.html",i));
             newsDAO.addNews(news);
 
             //更新设置用户密码

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
-@Autowired
+    @Autowired
     private UserDAO userDAO;
     public User getUser(int id){
         return userDAO.selectById(id);

@@ -1,7 +1,6 @@
 package com.lxwtest.controller;
 
 import com.lxwtest.model.User;
-import com.lxwtest.service.NewsService;
 import com.lxwtest.service.TestNewsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
