@@ -1,11 +1,10 @@
 package com.lxwtest.controller;
 
 import com.lxwtest.model.User;
-import com.lxwtest.service.TestNewsService;
+import com.lxwtest.service.ToutiaoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,14 +20,14 @@ public class IndexController {
     private static final Logger logger = LoggerFactory.getLogger(IndexController.class);
 
     @Autowired
-    private TestNewsService testNewsService;
+    private ToutiaoService toutiaoService;
 
     @RequestMapping(path={"/","/index"},method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public String index(HttpSession session){
         logger.info("Visit Index");
         return "Hello!"+ session.getAttribute("msg")
-                +"<br>Say:"+testNewsService.say();
+                +"<br>Say:"+ toutiaoService.say();
     }
 
     @RequestMapping(path={"/profile/{groupId}/{userId}"})
