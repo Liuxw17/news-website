@@ -2,9 +2,6 @@ package com.lxwtest.dao;
 
 import com.lxwtest.model.User;
 import org.apache.ibatis.annotations.*;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 //与数据库映射
 
@@ -20,6 +17,10 @@ public interface UserDAO {
 
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME," where id=#{id}"})
     User selectById(int id);
+
+    //对应检测用户是否被注册过
+    @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME," where name=#{name}"})
+    User selectByName(String name);
 
     @Update({"update", TABLE_NAME," set password=#{password} where id=#{id}"})
     void updatePassword(User user);
