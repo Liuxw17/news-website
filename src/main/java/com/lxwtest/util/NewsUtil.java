@@ -12,6 +12,20 @@ import java.util.Map;
 public class NewsUtil {
     private static final Logger logger = LoggerFactory.getLogger(NewsUtil.class);
 
+//    路径等需要灵活配置
+    public static String NEWS_DOMAIN = "http://127.0.0.1:8080/";
+    public static String IMAGE_DIR = "D:/upload/";
+    public static String[] IMAGE_FILE_EXTD = new String[] {"png", "bmp", "jpg", "jpeg"};
+
+    public static boolean isFileAllowed(String fileName) {
+        for (String ext : IMAGE_FILE_EXTD) {//数组比较小，直接遍历
+            if (ext.equals(fileName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 //    因为是工具类，所以做成静态的
     public static String getJSONString(int code) {
         JSONObject json = new JSONObject();

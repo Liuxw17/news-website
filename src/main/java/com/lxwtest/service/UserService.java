@@ -92,4 +92,9 @@ public class UserService {
         loginTicketDAO.addTicket(ticket);
         return ticket.getTicket();
     }
+
+    //登出逻辑,直接让前端传来的ticket过期
+    public void logout(String ticket){
+        loginTicketDAO.updateStatus(ticket,1);
+    }
 }

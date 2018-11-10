@@ -74,4 +74,12 @@ public class LoginController {
             return NewsUtil.getJSONString(1,"注册异常");
         }
     }
+
+    //登出
+    @RequestMapping(path = {"/logout"}, method = {RequestMethod.GET, RequestMethod.POST})
+//    @ResponseBody 需要去掉这个，否则return就当成字符串了
+    public String logout(@CookieValue("ticket") String ticket){
+        userService.logout(ticket);//登出
+        return "redirect:/";//登出之后自动返回首页
+    }
 }
