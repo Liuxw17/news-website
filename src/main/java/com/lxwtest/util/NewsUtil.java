@@ -12,6 +12,7 @@ import java.util.Map;
 public class NewsUtil {
     private static final Logger logger = LoggerFactory.getLogger(NewsUtil.class);
 
+//    因为是工具类，所以做成静态的
     public static String getJSONString(int code) {
         JSONObject json = new JSONObject();
         json.put("code", code);

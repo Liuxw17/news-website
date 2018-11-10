@@ -1,8 +1,10 @@
 package com.lxwtest;
 
 import com.lxwtest.NewsApplication;
+import com.lxwtest.dao.LoginTicketDAO;
 import com.lxwtest.dao.NewsDAO;
 import com.lxwtest.dao.UserDAO;
+import com.lxwtest.model.LoginTicket;
 import com.lxwtest.model.News;
 import com.lxwtest.model.User;
 import org.junit.Assert;
@@ -24,6 +26,8 @@ public class InitDatabaseTests{
     UserDAO userDAO;
     @Autowired
     NewsDAO newsDAO;
+    @Autowired
+    LoginTicketDAO loginTicketDAO;
 
     @Test
     //测试往数据库写入数据
@@ -54,12 +58,25 @@ public class InitDatabaseTests{
             //更新设置用户密码
             user.setPassword("newpassword");
             userDAO.updatePassword(user);
+
+            //验证ticket
+            LoginTicket ticket = new LoginTicket();
+            ticket.setStatus(0);
+            ticket.setUserId(i+1);
+            ticket.setExpired(date);
+            ticket.setTicket(String.format("TICKET%d", i+1));
+            loginTicketDAO.addTicket(ticket);
+
+            loginTicketDAO.updateStatus(ticket.getTicket(), 2);
         }
 
         //用断言来测试功能
         Assert.assertEquals("newpassword", userDAO.selectById(1).getPassword());//判断密码是否为newpassword
         userDAO.deleteById(1);//删除id=1的账户
         Assert.assertNull(userDAO.selectById(1));//判断id=1的账户是否为空
+
+        Assert.assertEquals(1, loginTicketDAO.selectByTicket("TICKET1").getUserId());
+        Assert.assertEquals(2, loginTicketDAO.selectByTicket("TICKET1").getStatus());
 
     }
 

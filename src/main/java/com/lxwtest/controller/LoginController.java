@@ -4,16 +4,16 @@ import com.lxwtest.model.News;
 import com.lxwtest.model.ViewObject;
 import com.lxwtest.service.NewsService;
 import com.lxwtest.service.UserService;
+import com.lxwtest.util.NewsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,17 +28,50 @@ public class LoginController {
     @Autowired
     UserService userService;
 
-    @RequestMapping(path = {"/reg"},method={RequestMethod.GET,RequestMethod.POST})
+    //注册
+    @RequestMapping(path = {"/reg"}, method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    public String reg(Model model,@RequestParam("username") String username,
+    public String reg(Model model, @RequestParam("username") String username,
                       @RequestParam("password") String password,
-                      @RequestParam(value="rember",defaultValue = "0") int rember){
+                      @RequestParam(value = "rember", defaultValue = "0") int remberme, HttpServletResponse response) {
 
-    try{
-        Map<String,Object> map = userService.register(username,password);
-        //Json串:{"code":0,"msg":"xxx"}
-
-    }catch (Exception e)
+        try {
+            Map<String, Object> map = userService.register(username, password);
+            //Json串:{"code":0,"msg":"xxx"}
+            if(map.containsKey("ticket")) {//包含ticket注册成功
+                Cookie cookie = new Cookie("ticket",map.get("ticket").toString());
+                cookie.setPath("/"); //设置为全站有效
+                if(remberme > 0){
+                    cookie.setMaxAge(3600*24*5);//5天的秒数
+                }
+                response.addCookie(cookie);
+                return NewsUtil.getJSONString(0, "注册成功");
+            }else{
+                return NewsUtil.getJSONString(1, map);
+            }
+        } catch (Exception e) {
+            logger.error("注册异常"+ e.getMessage());
+            return NewsUtil.getJSONString(1,"注册异常");
+        }
     }
-    return "";
+
+    @RequestMapping(path = {"/login"}, method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public String login(Model model, @RequestParam("username") String username,
+                      @RequestParam("password") String password,
+                      @RequestParam(value = "rember", defaultValue = "0") int rember) {
+
+        try {
+            Map<String, Object> map = userService.register(username, password);
+            //Json串:{"code":0,"msg":"xxx"}
+            if(map.containsKey("ticket")) {//包含ticket注册成功
+                return NewsUtil.getJSONString(0, "注册成功");
+            }else{
+                return NewsUtil.getJSONString(1, map);
+            }
+        } catch (Exception e) {
+            logger.error("注册异常"+ e.getMessage());
+            return NewsUtil.getJSONString(1,"注册异常");
+        }
+    }
 }
