@@ -74,10 +74,12 @@
 			<version>1.2.17</version>
 		</dependency>
 
+		<!-- 阿里巴巴家的fastjson -->
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
-			<version>1.2.13</version>
+			<!-- 及时更新有漏洞的版本 -->
+			<version>1.2.31</version>
 		</dependency>
 
 		<!--七牛云-->
