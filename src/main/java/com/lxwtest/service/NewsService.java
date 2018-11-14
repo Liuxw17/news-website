@@ -24,6 +24,17 @@ public class NewsService {
         return newsDAO.selectByUserIdAndOffset(userId, offset, limit);
     }
 
+    //增加新闻
+    public int addNews(News news){
+        newsDAO.addNews(news);
+        return news.getId();
+    }
+
+    //依据id获取新闻
+    public News getById(int newsId){
+        return newsDAO.getById(newsId);
+    }
+
     //存储图像
     public String saveImage(MultipartFile file) throws IOException {
         // xxx.jpg
