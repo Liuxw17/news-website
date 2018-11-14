@@ -26,14 +26,21 @@
 - 静态独立/CDN
 - 云存储（七牛云为例）
 - 资讯发布
+- 评论中心（独立模块）
+
 
 
 
 
 ### 项目心得：
-1. pom.xml的配置很重要，在使用Mybatis的时候因为pom.xml的配置问题卡住了很久(后面查询到原因为Mybatis的版本号的问题)；
-2. test文件夹下暂且多余的暂且未写好的程序会影响整个项目的运行，因未写好的NewsApplicationTests的存在耽误进度；
-3. DAO.xml里面的namespace要对应项目中的结构；
-4. 创建文件夹（Package）的时候要单个依次创建，不能直接创建（包文件路径和文件夹路径的区别）；
+1. Model：模型定义，和数据库相匹配  
+   DAO：数据读取  
+   Service：服务包装  
+   Controller：业务入口  
+   Test：测试 
+2. pom.xml的配置很重要，在使用Mybatis的时候因为pom.xml的配置问题卡住了很久(后面查询到原因为Mybatis的版本号的问题)；
+3. test文件夹下暂且多余的暂且未写好的程序会影响整个项目的运行，因未写好的NewsApplicationTests的存在耽误进度；
+4. DAO.xml里面的namespace要对应项目中的结构；
+5. 创建文件夹（Package）的时候要单个依次创建，不能直接创建（包文件路径和文件夹路径的区别）；
 比如com.lxwtest.dao需要先创建com,再创建lxwtest，再创建dao文件夹
-5. 
+6. 

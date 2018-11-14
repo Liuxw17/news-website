@@ -1,12 +1,10 @@
 package com.lxwtest;
 
-import com.lxwtest.NewsApplication;
+import com.lxwtest.dao.CommentDAO;
 import com.lxwtest.dao.LoginTicketDAO;
 import com.lxwtest.dao.NewsDAO;
 import com.lxwtest.dao.UserDAO;
-import com.lxwtest.model.LoginTicket;
-import com.lxwtest.model.News;
-import com.lxwtest.model.User;
+import com.lxwtest.model.*;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +17,7 @@ import java.util.Date;
 import java.util.Random;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = NewsApplication.class)
+@SpringApplicationConfiguration(classes = NewsWebsiteApplication.class)
 @Sql("/init-schema.sql")
 public class InitDatabaseTests{
     @Autowired
@@ -28,6 +26,8 @@ public class InitDatabaseTests{
     NewsDAO newsDAO;
     @Autowired
     LoginTicketDAO loginTicketDAO;
+    @Autowired
+    CommentDAO commentDAO;
 
     @Test
     //测试往数据库写入数据
@@ -55,6 +55,18 @@ public class InitDatabaseTests{
             news.setLink(String.format("http://www.xxx.com/%d.html",i));
             newsDAO.addNews(news);
 
+//            给咨询加3条评论
+            for(int j=0;j<3;j++){
+                Comment comment = new Comment();
+                comment.setUserId(i+1);
+                comment.setEntityId(news.getId());
+                comment.setEntityType(EntityType.ENTITY_NEWS);
+                comment.setStatus(0);
+                comment.setCreatedDate(new Date());
+                comment.setContent("Comment" + String.valueOf(j));
+                commentDAO.addComment(comment);
+            }
+
             //更新设置用户密码
             user.setPassword("newpassword");
             userDAO.updatePassword(user);
@@ -78,6 +90,7 @@ public class InitDatabaseTests{
         Assert.assertEquals(1, loginTicketDAO.selectByTicket("TICKET1").getUserId());
         Assert.assertEquals(2, loginTicketDAO.selectByTicket("TICKET1").getStatus());
 
+        Assert.assertNotNull(commentDAO.selectByEntity(1,EntityType.ENTITY_NEWS).get(0));
     }
 
 
