@@ -52,4 +52,9 @@ public class NewsService {
                 StandardCopyOption.REPLACE_EXISTING);//toPath()生成文件+如果存在便替换掉
         return NewsUtil.NEWS_DOMAIN + "image?name=" + fileName;
     }
+
+    //更新评论总数
+    public int updateCommentCount(int id,int count){
+        return newsDAO.updateCommentCount(id,count);
+    }
 }
