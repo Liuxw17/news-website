@@ -1,91 +1,18 @@
 package com.lxwtest.util;
 
-
+import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.*;
 
+import java.util.List;
+
 @Service
+//之所以这里用Service且配合LikeService使用，是因为直接从redis取值，不需要与mysql交互
 public class JedisAdapter implements InitializingBean {
     private static final Logger logger = LoggerFactory.getLogger(JedisAdapter.class);
-
-    private JedisPool pool = null;
-
-    @Override
-    public void afterPropertiesSet() throws Exception {//初始化以后
-        //jedis = new Jedis("localhost");
-        pool = new JedisPool("localhost", 6379);
-    }
-
-    private Jedis getJedis() {
-        //return jedis;
-        return pool.getResource();
-    }
-
-    public long sadd(String key, String value) {//集合里增加
-        Jedis jedis = null;
-        try {
-            jedis = pool.getResource();
-            return jedis.sadd(key, value);
-        } catch (Exception e) {
-            logger.error("发生异常" + e.getMessage());
-            return 0;
-        } finally {
-            if (jedis != null) {
-                jedis.close();
-            }
-        }
-    }
-
-    public long srem(String key, String value) {//集合里取消
-        Jedis jedis = null;
-        try {
-            jedis = pool.getResource();
-            return jedis.srem(key, value);
-        } catch (Exception e) {
-            logger.error("发生异常" + e.getMessage());
-            return 0;
-        } finally {
-            if (jedis != null) {
-                jedis.close();
-            }
-        }
-    }
-
-    public boolean sismember(String key, String value) {
-        Jedis jedis = null;
-        try {
-            jedis = pool.getResource();
-            return jedis.sismember(key, value);
-        } catch (Exception e) {
-            logger.error("发生异常" + e.getMessage());
-            return false;
-        } finally {
-            if (jedis != null) {
-                jedis.close();
-            }
-        }
-    }
-
-    public long scard(String key) {//看看集合里有多少人
-        Jedis jedis = null;
-        try {
-            jedis = pool.getResource();
-            return jedis.scard(key);
-        } catch (Exception e) {
-            logger.error("发生异常" + e.getMessage());
-            return 0;
-        } finally {
-            if (jedis != null) {
-                jedis.close();
-            }
-        }
-    }
-
-
-
 
     public static void print(int index, Object object) {
         System.out.println(String.format("%d,%s", index, object.toString()));
@@ -210,5 +137,162 @@ public class JedisAdapter implements InitializingBean {
 //            System.out.println("POOL:" + i);
 //            j.close();
 //        }
+    }
+
+    private Jedis jedis = null;
+    private JedisPool pool = null;
+
+    @Override
+    public void afterPropertiesSet() throws Exception {//初始化以后
+        //jedis = new Jedis("localhost");
+        pool = new JedisPool("localhost", 6379);
+    }
+
+    public String get(String key){
+        Jedis jedis = null;
+        try{
+            jedis = pool.getResource();
+            return jedis.get(key);
+        }catch(Exception e){
+            logger.error("发生异常" + e.getMessage());
+            return null;
+        }finally {
+            if(jedis!=null){
+                jedis.close();
+            }
+        }
+    }
+
+    public void set(String key,String value){
+        Jedis jedis = null;
+        try{
+            jedis = pool.getResource();
+            jedis.set(key,value);
+        } catch (Exception e){
+            logger.error("发生异常" + e.getMessage());
+        } finally {
+            if (jedis!=null){
+                jedis.close();
+            }
+        }
+    }
+
+    public long sadd(String key, String value) {//集合里增加
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.sadd(key, value);
+        } catch (Exception e) {
+            logger.error("发生异常" + e.getMessage());
+            return 0;
+        } finally {
+            if (jedis != null) {
+                jedis.close();//jedis不为空，则需要关闭
+            }
+        }
+    }
+
+    public long srem(String key, String value) {//集合里取消
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.srem(key, value);
+        } catch (Exception e) {
+            logger.error("发生异常" + e.getMessage());
+            return 0;
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+    }
+
+    public boolean sismember(String key, String value) {//查看是否已经存在
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.sismember(key, value);
+        } catch (Exception e) {
+            logger.error("发生异常" + e.getMessage());
+            return false;
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+    }
+
+    public long scard(String key) {//看看集合里有多少人
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.scard(key);
+        } catch (Exception e) {
+            logger.error("发生异常" + e.getMessage());
+            return 0;
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+    }
+
+    public void setex(String key, String value) {
+        // 验证码, 防机器注册，记录上次注册时间，有效期3天
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            jedis.setex(key, 10, value);
+        } catch (Exception e) {
+            logger.error("发生异常" + e.getMessage());
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+    }
+
+    public long lpush(String key, String value) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.lpush(key, value);
+        } catch (Exception e) {
+            logger.error("发生异常" + e.getMessage());
+            return 0;
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+    }
+
+    public List<String> brpop(int timeout, String key) {
+        Jedis jedis = null;
+        try {
+            jedis = pool.getResource();
+            return jedis.brpop(timeout, key);
+        } catch (Exception e) {
+            logger.error("发生异常" + e.getMessage());
+            return null;
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+    }
+
+//    把对象直接存进去
+    public void setObject(String key, Object obj) {
+        set(key, JSON.toJSONString(obj));
+    }
+
+//    把对象直接取出来
+    public <T> T getObject(String key, Class<T> clazz) {
+        String value = get(key);
+        if (value != null) {
+            return JSON.parseObject(value, clazz);
+        }
+        return null;
     }
 }

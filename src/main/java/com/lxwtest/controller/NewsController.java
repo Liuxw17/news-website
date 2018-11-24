@@ -1,10 +1,7 @@
 package com.lxwtest.controller;
 
 import com.lxwtest.model.*;
-import com.lxwtest.service.NewsService;
-import com.lxwtest.service.QiniuService;
-import com.lxwtest.service.UserService;
-import com.lxwtest.service.CommentService;
+import com.lxwtest.service.*;
 import com.lxwtest.util.NewsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,14 +26,21 @@ public class NewsController {
 
     @Autowired
     NewsService newsService;
+
     @Autowired
     QiniuService qiniuService;
+
     @Autowired
     HostHolder hostHolder;
+
     @Autowired
     UserService userService;
+
     @Autowired
     CommentService commentService;
+
+    @Autowired
+    LikeService likeService;
 
 
     @RequestMapping(path = {"/news/{newsId}"}, method = {RequestMethod.GET})
@@ -44,6 +48,14 @@ public class NewsController {
         try {
             News news = newsService.getById(newsId);
             if (news != null) {
+//                判断某条咨询喜欢以及不喜欢的数目
+                int localUserId = hostHolder.getUser() != null ? hostHolder.getUser().getId() : 0;
+                if (localUserId != 0) {
+                    model.addAttribute("like", likeService.getLikeStatus(localUserId, EntityType.ENTITY_NEWS, news.getId()));
+                } else {
+                    model.addAttribute("like", 0);
+                }
+                //评论
                 List<Comment> comments = commentService.getCommentsByEntity(news.getId(), EntityType.ENTITY_NEWS);
                 List<ViewObject> commentVOs = new ArrayList<ViewObject>();
                 for (Comment comment : comments) {

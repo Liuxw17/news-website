@@ -1,11 +1,12 @@
 package com.lxwtest.controller;
 
+import com.lxwtest.model.EntityType;
 import com.lxwtest.model.HostHolder;
 import com.lxwtest.model.News;
 import com.lxwtest.model.ViewObject;
+import com.lxwtest.service.LikeService;
 import com.lxwtest.service.NewsService;
 import com.lxwtest.service.UserService;
-import org.apache.catalina.Host;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,14 +29,25 @@ public class HomeController {
     @Autowired
     HostHolder hostHolder;
 
+    @Autowired
+    LikeService likeService;
+
     private List<ViewObject> getNews(int userId, int offset, int limit) {
         List<News> newsList = newsService.getLatestNews(userId, offset, limit);
+        int localUserId = hostHolder.getUser() != null ? hostHolder.getUser().getId() : 0;
 
         List<ViewObject> vos = new ArrayList<>();
         for (News news : newsList) {
             ViewObject vo = new ViewObject();
             vo.set("news", news);
             vo.set("user", userService.getUser(news.getUserId()));
+
+            if (localUserId != 0) { //判断当前用户是否喜欢
+                vo.set("like", likeService.getLikeStatus(localUserId, EntityType.ENTITY_NEWS, news.getId()));
+            } else {
+                vo.set("like", 0);
+            }
+
             vos.add(vo);
         }
         return vos;

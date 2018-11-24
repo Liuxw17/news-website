@@ -1,7 +1,8 @@
 package com.lxwtest.controller;
 
-import com.lxwtest.model.News;
-import com.lxwtest.model.ViewObject;
+import com.lxwtest.async.EventModel;
+import com.lxwtest.async.EventProducer;
+import com.lxwtest.async.EventType;
 import com.lxwtest.service.NewsService;
 import com.lxwtest.service.UserService;
 import com.lxwtest.util.NewsUtil;
@@ -14,8 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 
@@ -27,6 +26,9 @@ public class LoginController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    EventProducer eventProducer;
 
     //注册
     @RequestMapping(path = {"/reg"}, method = {RequestMethod.GET, RequestMethod.POST})
@@ -59,19 +61,30 @@ public class LoginController {
     @ResponseBody
     public String login(Model model, @RequestParam("username") String username,
                       @RequestParam("password") String password,
-                      @RequestParam(value = "rember", defaultValue = "0") int rember) {
+                      @RequestParam(value = "rember", defaultValue = "0") int remember,
+                        HttpServletResponse response) {
 
         try {
-            Map<String, Object> map = userService.register(username, password);
+            Map<String, Object> map = userService.login(username, password);
             //Json串:{"code":0,"msg":"xxx"}
             if(map.containsKey("ticket")) {//包含ticket注册成功
-                return NewsUtil.getJSONString(0, "注册成功");
+                Cookie cookie = new Cookie("ticket",map.get("ticket").toString());
+                cookie.setPath("/");
+                if (remember>0){
+                    cookie.setMaxAge(3600*24*5);
+                }
+                response.addCookie(cookie);//登录成功
+
+                eventProducer.fireEvent(new EventModel(EventType.LOGIN).setActorId((int) map.get("userId"))
+                .setExt("username","本网站").setExt("to","admin@xxx.com"));
+
+                return NewsUtil.getJSONString(0,"成功");
             }else{
                 return NewsUtil.getJSONString(1, map);
             }
         } catch (Exception e) {
-            logger.error("注册异常"+ e.getMessage());
-            return NewsUtil.getJSONString(1,"注册异常");
+            logger.error("登录异常"+ e.getMessage());
+            return NewsUtil.getJSONString(1,"登录异常");
         }
     }
 
